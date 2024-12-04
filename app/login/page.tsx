@@ -3,6 +3,7 @@ import { Button } from "../_components/ui/button";
 import { LogInIcon } from "lucide-react";
 import { SignInButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
+
 import { redirect } from "next/navigation";
 
 const LoginPage = async () => {
