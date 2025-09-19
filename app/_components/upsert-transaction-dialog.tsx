@@ -40,7 +40,7 @@ import {
 } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { upsertTransaction } from "../_actions/";
+import { upsertTransaction } from "../_actions/upsert-transaction/";
 
 interface UpsertTransactionDialogProps {
   isOpen: boolean;
@@ -53,24 +53,20 @@ const formSchema = z.object({
   name: z.string().trim().min(1, {
     message: "O nome é obrigatório.",
   }),
-  amount: z
-    .number({
-      required_error: "O valor é obrigatório.",
-    })
-    .positive({
-      message: "O valor deve ser positivo.",
-    }),
+  amount: z.number().positive({
+    message: "O valor deve ser positivo.",
+  }),
   type: z.nativeEnum(TransactionType, {
-    required_error: "O tipo é obrigatório.",
+    message: "O tipo é obrigatório.",
   }),
   category: z.nativeEnum(TransactionCategory, {
-    required_error: "A categoria é obrigatória.",
+    message: "A categoria é obrigatória.",
   }),
   paymentMethod: z.nativeEnum(TransactionPaymentMethod, {
-    required_error: "O método de pagamento é obrigatório.",
+    message: "O método de pagamento é obrigatório.",
   }),
   date: z.date({
-    required_error: "A data é obrigatória.",
+    message: "A data é obrigatória.",
   }),
 });
 
