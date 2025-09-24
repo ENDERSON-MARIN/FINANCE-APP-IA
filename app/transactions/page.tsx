@@ -5,10 +5,23 @@ import { transactionColumns } from "./_columns";
 import { db } from "../_lib/prisma";
 import AddTransactionButton from "../_components/add-transaction-button";
 import Navbar from "../_components/navbar";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 const TransactionsPage = async () => {
-  //accesar a las transacciones de la base de datos
-  const transactions = await db.transaction.findMany();
+  const { userId } = await auth();
+
+  //si no hay usuario logueado, redirigir a la página de login
+  if (!userId) {
+    redirect("/login");
+  }
+
+  //accesar a las transacciones de la base de datos del usuario logueado
+  const transactions = await db.transaction.findMany({
+    where: {
+      userId,
+    },
+  });
 
   return (
     <>
