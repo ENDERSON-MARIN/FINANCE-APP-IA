@@ -8,51 +8,46 @@ export const getDashboard = async (month: string) => {
   if (!userId) {
     throw new Error("Unauthorized");
   }
-  const monthWhere = {
+  const where = {
     userId,
     date: {
       gte: new Date(`2025-${month}-01`),
       lt: new Date(`2025-${month}-31`),
     },
   };
-  // Deposit Total
   const depositsTotal = Number(
     (
       await db.transaction.aggregate({
-        where: { ...monthWhere, type: "DEPOSIT" },
+        where: { ...where, type: "DEPOSIT" },
         _sum: { amount: true },
       })
     )?._sum?.amount,
   );
-  // Investment Total
   const investmentsTotal = Number(
     (
       await db.transaction.aggregate({
-        where: { ...monthWhere, type: "INVESTMENT" },
+        where: { ...where, type: "INVESTMENT" },
         _sum: { amount: true },
       })
     )?._sum?.amount,
   );
-  // Expense Total
   const expensesTotal = Number(
     (
       await db.transaction.aggregate({
-        where: { ...monthWhere, type: "EXPENSE" },
+        where: { ...where, type: "EXPENSE" },
         _sum: { amount: true },
       })
     )?._sum?.amount,
   );
   const balance = depositsTotal - investmentsTotal - expensesTotal;
-  // Total Transactions
   const transactionsTotal = Number(
     (
       await db.transaction.aggregate({
-        where: { ...monthWhere },
+        where,
         _sum: { amount: true },
       })
     )._sum.amount,
   );
-  // Percentage per type
   const typesPercentage: TransactionPercentagePerType = {
     [TransactionType.DEPOSIT]: Math.round(
       (Number(depositsTotal || 0) / Number(transactionsTotal)) * 100,
@@ -64,12 +59,11 @@ export const getDashboard = async (month: string) => {
       (Number(investmentsTotal || 0) / Number(transactionsTotal)) * 100,
     ),
   };
-  // Total Expense per Category
   const totalExpensePerCategory: TotalExpensePerCategory[] = (
     await db.transaction.groupBy({
       by: ["category"],
       where: {
-        ...monthWhere,
+        ...where,
         type: TransactionType.EXPENSE,
       },
       _sum: {
@@ -83,9 +77,8 @@ export const getDashboard = async (month: string) => {
       (Number(category._sum.amount) / Number(expensesTotal)) * 100,
     ),
   }));
-  // Last Transactions
   const lastTransactions = await db.transaction.findMany({
-    where: { ...monthWhere },
+    where,
     orderBy: { date: "desc" },
     take: 15,
   });
