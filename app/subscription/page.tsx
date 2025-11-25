@@ -6,6 +6,7 @@ import { CheckIcon, XIcon } from "lucide-react";
 import AcquirePlanButton from "./_components/acquire-plan-button";
 import { Badge } from "../_components/ui/badge";
 import { getCurrentMonthTransactions } from "../_data/get-current-month-transactions";
+import Footer from "../_components/footer";
 
 const SubscriptionPage = async () => {
   const { userId } = await auth();
@@ -21,7 +22,7 @@ const SubscriptionPage = async () => {
       <div className="space-y-6 p-6">
         <h1 className="text-2xl font-bold">Assinatura</h1>
 
-        <div className="flex gap-6">
+        <div className="flex justify-center gap-6">
           {/* Plano Básico */}
           <Card className="w-[450px]">
             <CardHeader className="border-b border-solid py-8">
@@ -78,6 +79,7 @@ const SubscriptionPage = async () => {
           </Card>
         </div>
       </div>
+      <Footer />
     </>
   );
 };
