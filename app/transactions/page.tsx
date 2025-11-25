@@ -5,6 +5,7 @@ import AddTransactionButton from "../_components/add-transaction-button";
 import Navbar from "../_components/navbar";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import Footer from "../_components/footer";
 
 const TransactionsPage = async () => {
   const { userId } = await auth();
@@ -35,6 +36,7 @@ const TransactionsPage = async () => {
           data={JSON.parse(JSON.stringify(transactions))}
         />
       </div>
+      <Footer />
     </>
   );
 };

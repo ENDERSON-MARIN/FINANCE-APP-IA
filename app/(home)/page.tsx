@@ -8,6 +8,7 @@ import TransactionsPieChart from "./_components/transactions-pie-chart";
 import { getDashboard } from "../_data/get-dashboard";
 import ExpensesPerCategory from "./_components/expenses-per-category";
 import LastTransactions from "./_components/last-transactions";
+import Footer from "../_components/footer";
 
 interface HomeProps {
   searchParams: {
@@ -46,6 +47,7 @@ const Home = async ({ searchParams: { month } }: HomeProps) => {
           <LastTransactions lastTransactions={dashboard.lastTransactions} />
         </div>
       </div>
+      <Footer />
     </>
   );
 };
