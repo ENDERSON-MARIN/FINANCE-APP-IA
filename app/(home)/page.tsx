@@ -27,9 +27,9 @@ const Home = async ({ searchParams: { month } }: HomeProps) => {
   }
   const dashboard = await getDashboard(month);
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <Navbar />
-      <div className="flex h-full flex-col space-y-6 overflow-hidden p-6">
+      <div className="flex h-full flex-1 flex-col space-y-6 overflow-hidden p-6">
         <div className="flex justify-between">
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <TimeSelect />
@@ -48,7 +48,7 @@ const Home = async ({ searchParams: { month } }: HomeProps) => {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 

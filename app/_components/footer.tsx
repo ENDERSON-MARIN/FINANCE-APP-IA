@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <div className="w-full gap-1 p-3 text-center md:p-5">
+    <footer className="mt-auto w-full gap-1 border-t p-3 text-center md:p-5">
       <p className="text-xs font-medium">
         © {new Date().getFullYear()} Copyright FINANCEAPP
       </p>
@@ -44,7 +44,7 @@ const Footer = () => {
           Mim
         </Link>
       </p>
-    </div>
+    </footer>
   );
 };
 
