@@ -2,26 +2,22 @@
 
 import { Button } from "@/app/_components/ui/button";
 import { createStripeCheckout } from "../_actions/create-stripe-checkout";
-import { loadStripe } from "@stripe/stripe-js";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 
 const AcquirePlanButton = () => {
   const { user } = useUser();
+
   const handleAcquirePlanClick = async () => {
-    const { sessionId } = await createStripeCheckout();
-    if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
-      throw new Error("Stripe publishable key not found");
+    const { url } = await createStripeCheckout();
+    if (!url) {
+      throw new Error("Stripe checkout URL not found");
     }
-    const stripe = await loadStripe(
-      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-    );
-    if (!stripe) {
-      throw new Error("Stripe not found");
-    }
-    await stripe.redirectToCheckout({ sessionId });
+    window.location.href = url;
   };
+
   const hasPremiumPlan = user?.publicMetadata.subscriptionPlan == "premium";
+
   if (hasPremiumPlan) {
     return (
       <Button className="w-full rounded-full font-bold" variant="link">
@@ -33,6 +29,7 @@ const AcquirePlanButton = () => {
       </Button>
     );
   }
+
   return (
     <Button
       className="w-full rounded-full font-bold"

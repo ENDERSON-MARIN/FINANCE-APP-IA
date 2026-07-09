@@ -12,7 +12,7 @@ export const POST = async (request: Request) => {
   }
   const text = await request.text();
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: "2024-10-28.acacia",
+    apiVersion: "2026-06-24.dahlia",
   });
   const event = stripe.webhooks.constructEvent(
     text,
@@ -20,16 +20,24 @@ export const POST = async (request: Request) => {
     process.env.STRIPE_WEBHOOK_SECRET,
   );
 
+  const clerk = await clerkClient();
+
   switch (event.type) {
     case "invoice.paid": {
       // Atualizar o usuário com o seu novo plano
-      const { customer, subscription, subscription_details } =
-        event.data.object;
-      const clerkUserId = subscription_details?.metadata?.clerk_user_id;
+      const invoice = event.data.object;
+      const customer = invoice.customer;
+      const subscription =
+        "subscription" in invoice ? invoice.subscription : null;
+      const clerkUserId = (
+        invoice as unknown as {
+          subscription_details?: { metadata?: { clerk_user_id?: string } };
+        }
+      ).subscription_details?.metadata?.clerk_user_id;
       if (!clerkUserId) {
         return NextResponse.error();
       }
-      await clerkClient().users.updateUser(clerkUserId, {
+      await clerk.users.updateUser(clerkUserId, {
         privateMetadata: {
           stripeCustomerId: customer,
           stripeSubscriptionId: subscription,
@@ -49,7 +57,7 @@ export const POST = async (request: Request) => {
       if (!clerkUserId) {
         return NextResponse.error();
       }
-      await clerkClient().users.updateUser(clerkUserId, {
+      await clerk.users.updateUser(clerkUserId, {
         privateMetadata: {
           stripeCustomerId: null,
           stripeSubscriptionId: null,

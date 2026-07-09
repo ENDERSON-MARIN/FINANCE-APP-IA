@@ -22,7 +22,7 @@ Este projeto é o **Finance App** — plataforma web de gestão de finanças pes
 - **SEMPRE** use nomes de variáveis descritivos (`transactionType`, `currentMonthBalance`, `isPremiumPlan`)
 - **SEMPRE** use `interface` para objetos de domínio e tipos de retorno de dados
 - **SEMPRE** aplique DRY — componentes em `_components/` devem ser verdadeiramente reutilizáveis
-- **SEMPRE** use `npm` para instalar dependências neste projeto
+- **SEMPRE** use `pnpm` para instalar dependências neste projeto
 - **SEMPRE** após qualquer alteração, verificar se há erros de TypeScript com `npx tsc --noEmit` antes de finalizar
 - **NUNCA** commitar informações sensíveis — validar `.gitignore` antes de qualquer commit
 - **NUNCA** introduzir dependências novas sem justificativa — avaliar se shadcn/ui já cobre o caso antes de adicionar

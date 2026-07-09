@@ -11,12 +11,13 @@ import LastTransactions from "./_components/last-transactions";
 import Footer from "../_components/footer";
 
 interface HomeProps {
-  searchParams: {
+  searchParams: Promise<{
     month: string;
-  };
+  }>;
 }
 
-const Home = async ({ searchParams: { month } }: HomeProps) => {
+const Home = async ({ searchParams }: HomeProps) => {
+  const { month } = await searchParams;
   const { userId } = await auth();
   if (!userId) {
     redirect("/login");
