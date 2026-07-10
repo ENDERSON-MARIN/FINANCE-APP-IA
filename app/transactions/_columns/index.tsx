@@ -1,6 +1,6 @@
 "use client";
 
-import { Transaction } from "@prisma/client";
+import { TransactionDto } from "@/app/_data/get-dashboard/types";
 import { ColumnDef } from "@tanstack/react-table";
 import TransactionTypeBadge from "../_components/type-badge";
 import { Button } from "@/app/_components/ui/button";
@@ -11,7 +11,7 @@ import {
 } from "@/app/_constants/transactions";
 import EditTransactionButton from "../_components/edit-transaction-button";
 
-export const transactionColumns: ColumnDef<Transaction>[] = [
+export const transactionColumns: ColumnDef<TransactionDto>[] = [
   {
     accessorKey: "name",
     header: "Nome",

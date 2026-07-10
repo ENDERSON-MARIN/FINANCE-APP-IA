@@ -1,6 +1,10 @@
 import { db } from "@/app/_lib/prisma";
 import { TransactionType } from "@prisma/client";
-import { TotalExpensePerCategory, TransactionPercentagePerType } from "./types";
+import {
+  TotalExpensePerCategory,
+  TransactionDto,
+  TransactionPercentagePerType,
+} from "./types";
 import { auth } from "@clerk/nextjs/server";
 
 export const getDashboard = async (month: string) => {
@@ -77,11 +81,13 @@ export const getDashboard = async (month: string) => {
       (Number(category._sum.amount) / Number(expensesTotal)) * 100,
     ),
   }));
-  const lastTransactions = await db.transaction.findMany({
-    where,
-    orderBy: { date: "desc" },
-    take: 15,
-  });
+  const lastTransactions: TransactionDto[] = (
+    await db.transaction.findMany({
+      where,
+      orderBy: { date: "desc" },
+      take: 15,
+    })
+  ).map((t) => ({ ...t, amount: Number(t.amount) }));
   return {
     balance,
     depositsTotal,

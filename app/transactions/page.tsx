@@ -6,21 +6,21 @@ import Navbar from "../_components/navbar";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Footer from "../_components/footer";
+import { TransactionDto } from "../_data/get-dashboard/types";
 
 const TransactionsPage = async () => {
   const { userId } = await auth();
 
-  //si no hay usuario logueado, redirigir a la página de login
   if (!userId) {
     redirect("/login");
   }
 
-  //accesar a las transacciones de la base de datos del usuario logueado
-  const transactions = await db.transaction.findMany({
-    where: {
-      userId,
-    },
-  });
+  const transactions: TransactionDto[] = (
+    await db.transaction.findMany({
+      where: { userId },
+      orderBy: { date: "desc" },
+    })
+  ).map((t) => ({ ...t, amount: Number(t.amount) }));
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -31,10 +31,7 @@ const TransactionsPage = async () => {
           <AddTransactionButton />
         </div>
 
-        <DataTable
-          columns={transactionColumns}
-          data={JSON.parse(JSON.stringify(transactions))}
-        />
+        <DataTable columns={transactionColumns} data={transactions} />
       </div>
       <Footer />
     </div>
