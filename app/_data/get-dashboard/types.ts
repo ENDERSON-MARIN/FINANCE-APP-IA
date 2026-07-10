@@ -2,6 +2,7 @@ import {
   TransactionCategory,
   TransactionPaymentMethod,
   TransactionType,
+  ExpenseNature,
 } from "@prisma/client";
 
 export type TransactionPercentagePerType = {
@@ -23,6 +24,7 @@ export interface TransactionDto {
   category: TransactionCategory;
   paymentMethod: TransactionPaymentMethod;
   date: Date;
+  expenseNature: ExpenseNature | null;
   createdAt: Date;
   updatedAt: Date;
   userId: string;

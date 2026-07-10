@@ -6,6 +6,7 @@ import {
   TransactionCategory,
   TransactionPaymentMethod,
   TransactionType,
+  ExpenseNature,
 } from "@prisma/client";
 import { upsertTransactionSchema } from "./schema";
 import { revalidatePath } from "next/cache";
@@ -18,6 +19,7 @@ interface UpsertTransactionParams {
   category: TransactionCategory;
   paymentMethod: TransactionPaymentMethod;
   date: Date;
+  expenseNature?: ExpenseNature;
 }
 
 export const upsertTransaction = async (params: UpsertTransactionParams) => {

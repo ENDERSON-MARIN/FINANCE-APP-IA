@@ -7,6 +7,8 @@ interface PercentageItemProps {
 }
 
 const PercentageItem = ({ icon, title, value }: PercentageItemProps) => {
+  const safeValue = isNaN(value) || !isFinite(value) ? 0 : value;
+
   return (
     <div className="flex items-center justify-between">
       {/* Icone */}
@@ -14,7 +16,7 @@ const PercentageItem = ({ icon, title, value }: PercentageItemProps) => {
         <div className="rounded-lg bg-white bg-opacity-[3%] p-2">{icon}</div>
         <p className="text-sm text-muted-foreground">{title}</p>
       </div>
-      <p className="text-sm font-bold">{value}%</p>
+      <p className="text-sm font-bold">{safeValue}%</p>
     </div>
   );
 };

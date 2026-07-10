@@ -2,6 +2,7 @@ import {
   TransactionCategory,
   TransactionPaymentMethod,
   TransactionType,
+  ExpenseNature,
 } from "@prisma/client";
 
 export const TRANSACTION_PAYMENT_METHOD_ICONS = {
@@ -122,5 +123,21 @@ export const TRANSACTION_CATEGORY_OPTIONS = [
   {
     value: TransactionCategory.UTILITY,
     label: TRANSACTION_CATEGORY_LABELS[TransactionCategory.UTILITY],
+  },
+];
+
+export const EXPENSE_NATURE_LABELS: Record<ExpenseNature, string> = {
+  [ExpenseNature.ESSENTIAL]: "Essencial",
+  [ExpenseNature.LIFESTYLE]: "Estilo de Vida",
+};
+
+export const EXPENSE_NATURE_OPTIONS = [
+  {
+    value: ExpenseNature.ESSENTIAL,
+    label: EXPENSE_NATURE_LABELS[ExpenseNature.ESSENTIAL],
+  },
+  {
+    value: ExpenseNature.LIFESTYLE,
+    label: EXPENSE_NATURE_LABELS[ExpenseNature.LIFESTYLE],
   },
 ];

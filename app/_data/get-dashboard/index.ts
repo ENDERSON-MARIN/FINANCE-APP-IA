@@ -52,15 +52,17 @@ export const getDashboard = async (month: string) => {
       })
     )._sum.amount,
   );
+  const safePercentage = (value: number, total: number): number => {
+    if (!total || isNaN(total)) return 0;
+    return Math.round((value / total) * 100);
+  };
+
   const typesPercentage: TransactionPercentagePerType = {
-    [TransactionType.DEPOSIT]: Math.round(
-      (Number(depositsTotal || 0) / Number(transactionsTotal)) * 100,
-    ),
-    [TransactionType.EXPENSE]: Math.round(
-      (Number(expensesTotal || 0) / Number(transactionsTotal)) * 100,
-    ),
-    [TransactionType.INVESTMENT]: Math.round(
-      (Number(investmentsTotal || 0) / Number(transactionsTotal)) * 100,
+    [TransactionType.DEPOSIT]: safePercentage(depositsTotal, transactionsTotal),
+    [TransactionType.EXPENSE]: safePercentage(expensesTotal, transactionsTotal),
+    [TransactionType.INVESTMENT]: safePercentage(
+      investmentsTotal,
+      transactionsTotal,
     ),
   };
   const totalExpensePerCategory: TotalExpensePerCategory[] = (
@@ -77,8 +79,9 @@ export const getDashboard = async (month: string) => {
   ).map((category) => ({
     category: category.category,
     totalAmount: Number(category._sum.amount),
-    percentageOfTotal: Math.round(
-      (Number(category._sum.amount) / Number(expensesTotal)) * 100,
+    percentageOfTotal: safePercentage(
+      Number(category._sum.amount),
+      expensesTotal,
     ),
   }));
   const lastTransactions: TransactionDto[] = (

@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import {
+  EXPENSE_NATURE_OPTIONS,
   TRANSACTION_CATEGORY_OPTIONS,
   TRANSACTION_PAYMENT_METHOD_OPTIONS,
   TRANSACTION_TYPE_OPTIONS,
@@ -37,6 +38,7 @@ import {
   TransactionType,
   TransactionCategory,
   TransactionPaymentMethod,
+  ExpenseNature,
 } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -68,6 +70,7 @@ const formSchema = z.object({
   date: z.date({
     message: "A data é obrigatória.",
   }),
+  expenseNature: z.nativeEnum(ExpenseNature).optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -87,12 +90,21 @@ const UpsertTransactionDialog = ({
       name: "",
       paymentMethod: TransactionPaymentMethod.CASH,
       type: TransactionType.EXPENSE,
+      expenseNature: undefined,
     },
   });
 
+  const selectedType = form.watch("type");
+  const isExpense = selectedType === TransactionType.EXPENSE;
+
   const onSubmit = async (data: FormSchema) => {
     try {
-      await upsertTransaction({ ...data, id: transactionId });
+      // Se não for despesa, garantir que expenseNature não é enviado
+      const payload = {
+        ...data,
+        expenseNature: isExpense ? data.expenseNature : undefined,
+      };
+      await upsertTransaction({ ...payload, id: transactionId });
       setIsOpen(false);
       form.reset();
     } catch (error) {
@@ -169,7 +181,7 @@ const UpsertTransactionDialog = ({
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a verified email to display" />
+                        <SelectValue placeholder="Selecione o tipo..." />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -184,6 +196,35 @@ const UpsertTransactionDialog = ({
                 </FormItem>
               )}
             />
+            {isExpense && (
+              <FormField
+                control={form.control}
+                name="expenseNature"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Natureza da Despesa</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value ?? ""}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a natureza..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {EXPENSE_NATURE_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="category"
